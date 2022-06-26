@@ -62,6 +62,15 @@ The source will be organized like this:
    └── edge
 ```
 
+## Go API
+
+The Go API/file server can be run locally with `fiber dev` or with `docker`.
+Flags may be supplied to configure values for the application:
+
+* `content` -- filepath to directory containing website content; may be absolute or relative
+* `domain` -- website domain; used to set cookie
+* `port` -- port on which the server will listen
+
 [alpine]: https://alpinejs.dev/
 [compute]: https://developer.fastly.com/learning/compute
 [comrak]: https://docs.rs/comrak/latest/comrak/index.html
