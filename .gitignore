@@ -34,3 +34,6 @@ override.tf.json
 *_override.tf.json
 .terraformrc
 terraform.rc
+
+# html build files
+content/static/site.css

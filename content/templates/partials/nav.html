@@ -1,0 +1,10 @@
+<div class="h-fit">
+  <header x-bind:class="$store.sidebar.open ? 'ml-60' : 'ml-0'" class="flex justify-between w-full h-16 min-h-full
+        bg-bg-navbar dark:bg-ajdev-blue-dark text-ajdev-text transition-all">
+    <div class="flex items-center px-4 w-full"> <!-- header content -->
+      {{ template "partials/nav/menu-toggle" }}
+      <h1 class="text-xl ml-2">aspenjames.dev</h6> <!-- "logo" -->
+    </div> <!-- end header content -->
+  </header>
+  {{ template "partials/nav/sidebar" . }}
+</div>
