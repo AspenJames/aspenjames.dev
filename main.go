@@ -1,8 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
+	"os"
 	"regexp"
 	"strings"
 	"time"
@@ -24,8 +27,8 @@ var (
 )
 
 type navLink struct {
-	Name   string
-	Path   string
+	Name   string `json:"name"`
+	Path   string `json:"path"`
 	Active bool
 }
 
@@ -55,7 +58,12 @@ func main() {
 		CacheControl: true,
 	}))
 	app.Use(darkModeMiddleware)
-	app.Use(navLinkMiddleware)
+
+	links, err := parseNavLinks()
+	if err != nil {
+		os.Exit(1)
+	}
+	app.Use(navLinkMiddleware(links))
 
 	// Static files.
 	app.Static("/static", fmt.Sprintf("%s/static", content))
@@ -105,31 +113,29 @@ func darkModeMiddleware(c *fiber.Ctx) error {
 }
 
 // Define navigation links & bind template var.
-func navLinkMiddleware(c *fiber.Ctx) error {
-	path := c.Path()
-	c.Bind(fiber.Map{
-		"NavLinks": []navLink{
-			{
-				Name:   "Home",
-				Path:   "/",
-				Active: path == "/",
-			},
-			{
-				Name:   "About",
-				Path:   "/about",
-				Active: path == "/about",
-			},
-			{
-				Name:   "Resume",
-				Path:   "/resume",
-				Active: path == "/resume",
-			},
-			{
-				Name:   "Particles",
-				Path:   "/particles",
-				Active: path == "/particles",
-			},
-		},
-	})
-	return c.Next()
+func navLinkMiddleware(navLinks []*navLink) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		currentPath := c.Path()
+		for _, l := range navLinks {
+			l.Active = l.Path == currentPath
+		}
+		c.Bind(fiber.Map{
+			"NavLinks":   navLinks,
+			"ActivePath": c.Path(),
+		})
+		return c.Next()
+	}
+}
+
+func parseNavLinks() ([]*navLink, error) {
+	links := make([]*navLink, 0)
+	data, err := ioutil.ReadFile(fmt.Sprintf("%s/routes.json", content))
+	if err != nil {
+		return links, err
+	}
+	err = json.Unmarshal(data, &links)
+	if err != nil {
+		return links, err
+	}
+	return links, nil
 }
