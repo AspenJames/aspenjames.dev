@@ -17,6 +17,7 @@ import (
 )
 
 var (
+	content           string
 	darkModeCookieKey string = "aj-dot-dev::dark-mode"
 	domain            string
 	port              int
@@ -29,13 +30,14 @@ type navLink struct {
 }
 
 func main() {
+	flag.StringVar(&content, "content", "/usr/src/content", "Website content directory")
 	flag.StringVar(&domain, "domain", "aspenjames.dev", "Website domain")
 	flag.IntVar(&port, "port", 3030, "HTTP port")
 	flag.Parse()
 
 	// Init app & template engine.
 	app := fiber.New(fiber.Config{
-		Views:       html.New("./content/templates", ".html"),
+		Views:       html.New(fmt.Sprintf("%s/templates", content), ".html"),
 		ViewsLayout: "layouts/main",
 	})
 
@@ -43,7 +45,7 @@ func main() {
 	app.Use(recover.New())
 	app.Use(logger.New())
 	app.Use(favicon.New(favicon.Config{
-		File: "./content/static/favicon.ico",
+		File: fmt.Sprintf("%s/static/favicon.ico", content),
 	}))
 	app.Use(compress.New(compress.Config{
 		Level: compress.LevelBestCompression,
@@ -56,7 +58,7 @@ func main() {
 	app.Use(navLinkMiddleware)
 
 	// Static files.
-	app.Static("/static", "./content/static")
+	app.Static("/static", fmt.Sprintf("%s/static", content))
 
 	// Routes.
 	app.Get("/", func(c *fiber.Ctx) error {
