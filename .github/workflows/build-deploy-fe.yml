@@ -31,6 +31,7 @@ jobs:
       with:
         node-version: '16'
         cache: 'npm'
+        cache-dependency-path: 'content/package-lock.json'
 
     - name: Install dependencies
       run: npm ci
@@ -55,7 +56,7 @@ jobs:
     - name: Restart server daemon
       run: |
         gcloud compute ssh \
-          --zone us-west-1b \
+          --zone us-west1-b \
           --project nimble-granite-354015 \
           --command "sudo systemctl restart dot_dev.service" \
           dot-dev-server
