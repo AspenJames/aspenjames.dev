@@ -1,0 +1,53 @@
+name: Build & Deploy Frontend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'content/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'content/**'
+
+jobs:
+  build:
+    name: 📺 Build & deploy frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./content
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+        cache: 'npm'
+      run: npm ci
+
+    - name: Build Tailwind CSS
+      run: npm run build-css
+
+    - name: Auth w/ Google
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS }}
+
+    - name: Upload frontend assets & restart server
+      uses: 'google-github-actions/setup-gcloud@v0'
+      run: |
+        gcloud compute scp --recurse \
+          static/ templates/ routes.json \
+          dot-dev-server:~ && \
+        gcloud compute ssh \
+          --zone us-west-1b \
+          --project nimble-granite-354015 \
+          --command "sudo systemctl restart dot_dev.service" \
+          dot-dev-server
