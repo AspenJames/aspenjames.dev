@@ -22,6 +22,9 @@ go.work
 
 # terraform
 **/.terraform/*
+**/.terraform.lock.hcl
+**/gcp_*.json
+
 *.tfstate
 *.tfstate.*
 crash.log
