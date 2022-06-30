@@ -18,6 +18,18 @@ resource "google_service_account" "dot_dev" {
   account_id = "dot-dev-${var.google_region}"
 }
 
+resource "google_project_iam_binding" "instance-admin" {
+  project = var.google_project
+  role    = "roles/compute.instanceAdmin"
+  members = ["serviceAccount:${google_service_account.dot_dev.email}"]
+}
+
+resource "google_project_iam_binding" "service-account" {
+  project = var.google_project
+  role    = "roles/iam.serviceAccountUser"
+  members = ["serviceAccount:${google_service_account.dot_dev.email}"]
+}
+
 resource "google_service_account_key" "dot_dev" {
   service_account_id = google_service_account.dot_dev.name
 }
