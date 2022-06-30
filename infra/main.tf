@@ -83,7 +83,7 @@ resource "google_compute_instance" "dot_dev" {
   TimeoutStartSec=0
   Restart=always
   ExecStartPre=-/usr/bin/docker pull aspenjames/aspenjames.dev:latest
-  ExecStart=-/usr/bin/docker run --rm --name dot_dev -v /home/aspen:/usr/src/content -p 80:3030 -t aspenjames/aspenjames.dev:latest
+  ExecStart=-/usr/bin/docker run --rm --name dot_dev -v /home/runner:/usr/src/content -p 80:3030 -t aspenjames/aspenjames.dev:latest
   ExecStop=/usr/bin/docker stop dot_dev
   EOF
 
