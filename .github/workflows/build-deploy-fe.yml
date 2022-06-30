@@ -54,10 +54,9 @@ jobs:
           dot-dev-server:~
 
     - name: Restart server daemon
-      run: |
-        gcloud compute ssh \
-          --zone us-west1-b \
-          --project nimble-granite-354015 \
-          --command "sudo systemctl restart dot_dev.service" \
-          dot-dev-server \
-          -- -o "StrictHostKeyChecking=no"
+      uses: 'google-github-actions/ssh-compute@v0'
+      with:
+        instance_name: 'dot-dev-server'
+        zone: 'us-west1-b'
+        ssh_private_key: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS }}
+        command: 'sudo systemctl restart dot_dev.service'
