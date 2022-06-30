@@ -49,8 +49,8 @@ jobs:
 
     - name: Upload frontend assets
       run: |
-        gcloud compute scp --recurse \
-          static/ templates/ routes.json \
+        gcloud compute scp --zone us-west1-b \
+          --recurse static/ templates/ routes.json \
           dot-dev-server:~
 
     - name: Restart server daemon
