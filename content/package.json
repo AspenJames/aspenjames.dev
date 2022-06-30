@@ -1,7 +1,6 @@
 {
   "scripts": {
-    "build-css": "tailwindcss -i ./css/input.css -o ./static/site.css -m",
-    "prebuild-css": "rm ./static/site.css"
+    "build-css": "tailwindcss -i ./css/input.css -o ./static/site.css -m"
   },
   "devDependencies": {
     "tailwindcss": "^3.1.4"
