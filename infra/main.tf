@@ -67,7 +67,7 @@ resource "google_compute_instance" "dot_dev" {
 
   service_account {
     email  = google_service_account.dot_dev.email
-    scopes = ["cloud-platform"]
+    scopes = ["cloud-platform", "compute-rw"]
   }
 
   metadata_startup_script = <<-EOT

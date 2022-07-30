@@ -30,7 +30,9 @@ jobs:
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.GOOGLE_SERVICE_ACCOUNT_SSH_PRIV_KEY }}" > ~/.ssh/google_compute_engine
+        chmod 0600 ~/.ssh/google_compute_engine
         echo "${{ secrets.GOOGLE_SERVICE_ACCOUNT_SSH_PUB_KEY }}" > ~/.ssh/google_compute_engine.pub
+        chmod 0644 ~/.ssh/google_compute_engine.pub
 
     - name: Setup node
       uses: actions/setup-node@v3
