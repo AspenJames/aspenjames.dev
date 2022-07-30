@@ -49,5 +49,5 @@ jobs:
       with:
         instance_name: 'dot-dev-server'
         zone: 'us-west1-b'
-        ssh_private_key: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS }}
+        ssh_private_key: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_SSH_PRIV_KEY }}
         command: 'sudo systemctl restart dot_dev.service'
