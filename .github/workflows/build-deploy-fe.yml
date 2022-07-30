@@ -26,6 +26,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Setup GCP ssh keyfile
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS }}" > ~/.ssh/google_compute_engine
+
     - name: Setup node
       uses: actions/setup-node@v3
       with:
@@ -50,6 +55,7 @@ jobs:
     - name: Upload frontend assets
       run: |
         gcloud compute scp --zone us-west1-b \
+          --ssh-key-file ~/.ssh/google_compute_engine \
           --recurse static/ templates/ routes.json \
           dot-dev-server:~
 
