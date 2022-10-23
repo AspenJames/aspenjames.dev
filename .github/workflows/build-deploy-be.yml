@@ -39,15 +39,14 @@ jobs:
         push: true
         tags: aspenjames/aspenjames.dev:latest
 
-    - name: Auth w/ Google
-      uses: 'google-github-actions/auth@v0'
-      with:
-        credentials_json: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS }}
+    - name: Setup ssh keyfile
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_KEY }}" > ~/.ssh/dot_dev
+        chmod 0600 ~/.ssh/dot_dev
 
     - name: Restart server daemon
-      uses: 'google-github-actions/ssh-compute@v0'
-      with:
-        instance_name: 'dot-dev-server'
-        zone: 'us-west1-b'
-        ssh_private_key: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_SSH_PRIV_KEY }}
-        command: 'sudo systemctl restart dot_dev.service'
+      run: |
+        ssh -i ~/.ssh/dot_dev \
+          "root@${{ secrets.LINODE_IP }}" \
+          systemctl restart dot_dev
