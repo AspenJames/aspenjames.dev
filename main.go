@@ -54,8 +54,11 @@ func main() {
 		Level: compress.LevelBestCompression,
 	}))
 	app.Use(cache.New(cache.Config{
-		Expiration:   60 * time.Minute,
+		Expiration:   7 * 24 * time.Hour,
 		CacheControl: true,
+		Next: func(c *fiber.Ctx) bool {
+			return c.Response().StatusCode() >= 400
+		},
 	}))
 	app.Use(darkModeMiddleware)
 
