@@ -43,7 +43,7 @@
           this.on = mode;
           const htmlClassList = document.body.parentElement.classList;
           const targetFunc = htmlClassList[this.on ? 'add' : 'remove'];
-          targetFunc.call(htmlClassList, 'dark')
+          targetFunc.call(htmlClassList, 'dark');
         },
       });
     });
