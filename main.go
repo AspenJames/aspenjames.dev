@@ -35,7 +35,7 @@ type navLink struct {
 func main() {
 	flag.StringVar(&content, "content", "/usr/src/content", "Website content directory")
 	flag.StringVar(&domain, "domain", "aspenjames.dev", "Website domain")
-	flag.IntVar(&port, "port", 3030, "HTTP port")
+	flag.IntVar(&port, "port", 80, "HTTP port")
 	flag.Parse()
 
 	// Init app & template engine.
