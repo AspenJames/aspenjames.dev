@@ -51,7 +51,7 @@ func main() {
 		File: fmt.Sprintf("%s/static/favicon.ico", content),
 	}))
 	app.Use(compress.New(compress.Config{
-		Level: compress.LevelBestCompression,
+		Level: compress.LevelBestSpeed,
 	}))
 	app.Use(cache.New(cache.Config{
 		Expiration:   7 * 24 * time.Hour,
