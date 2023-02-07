@@ -1,23 +1,17 @@
-name: Build & Deploy Backend
+name: 🐳 Build & Push Docker
 
 on:
   workflow_dispatch:
   push:
     branches:
       - main
-    paths:
-      - '**.go'
-      - 'Dockerfile'
   pull_request:
     branches:
       - main
-    paths:
-      - '**.go'
-      - 'Dockerfile'
 
 jobs:
-  be:
-    name: 💻 Build & deploy server
+  docker:
+    name: 🐳 Build & push
     runs-on: ubuntu-latest
 
     steps:
@@ -37,16 +31,6 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: aspenjames/aspenjames.dev:latest
-
-    - name: Setup ssh keyfile
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_KEY }}" > ~/.ssh/dot_dev
-        chmod 0600 ~/.ssh/dot_dev
-
-    - name: Restart server daemon
-      run: |
-        ssh -i ~/.ssh/dot_dev \
-          "root@${{ secrets.LINODE_IP }}" \
-          systemctl restart dot_dev
+        tags: 
+          - aspenjames/aspenjames.dev:latest
+          - aspenjames/aspenjames.dev:${{ github.sha }}
