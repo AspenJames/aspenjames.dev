@@ -32,4 +32,4 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: aspenjames/aspenjames.dev:${{ github.sha }}
+          tags: aspenjames/aspenjames.dev:${{ github.sha }},aspenjames/aspenjames.dev:${{ env.GITHUB_REF_NAME }}
