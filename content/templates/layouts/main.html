@@ -10,6 +10,15 @@
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script>
     /* Initialize Alpine.js data stores. */
+    let isDark = false;
+    const cookies = document.cookie.split(';');
+    for (let i=0; i<cookies.length; i++) {
+      const [key, value] = cookies[i].split("=");
+      if (key === this._key) {
+        isDark = (value.match(/dark/i) !== null);
+        break;
+      }
+    }
     document.addEventListener('alpine:init', () => {
       Alpine.store('sidebar', {
         open: false,
@@ -17,20 +26,10 @@
         init() { this.open = false },
       });
       Alpine.store('darkMode', {
-        on: false,
+        on: isDark,
         toggle() {
           this._setDarkMode(!this.on);
           this._setCookie(this.on ? 'dark' : 'light');
-        },
-        init() {
-          const cookies = document.cookie.split(';');
-          for (let i=0; i<cookies.length; i++) {
-            const [key, value] = cookies[i].split("=");
-            if (key === this._key) {
-              this._setDarkMode(value.match(/dark/i) !== null);
-              break;
-            }
-          }
         },
         _key: '{{ .DarkModeCookieKey }}',
         _setCookie(mode) {
