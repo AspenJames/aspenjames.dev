@@ -9,16 +9,18 @@
   <link rel="stylesheet" href="/static/site.css" />
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script>
-    /* Initialize Alpine.js data stores. */
+    /* Get dark mode state from cookie. */
+    const darkModeKey = '{{ .DarkModeCookieKey }}';
     let isDark = false;
     const cookies = document.cookie.split(';');
     for (let i=0; i<cookies.length; i++) {
       const [key, value] = cookies[i].split("=");
-      if (key === this._key) {
+      if (key === darkModeKey) {
         isDark = (value.match(/dark/i) !== null);
         break;
       }
     }
+    /* Initialize Alpine.js data stores. */
     document.addEventListener('alpine:init', () => {
       Alpine.store('sidebar', {
         open: false,
@@ -31,12 +33,14 @@
           this._setDarkMode(!this.on);
           this._setCookie(this.on ? 'dark' : 'light');
         },
-        _key: '{{ .DarkModeCookieKey }}',
+        init() {
+          this._setDarkMode(isDark);
+        },
         _setCookie(mode) {
           const dt = new Date();
           dt.setFullYear(dt.getFullYear() + 1);
           const expires = dt.toUTCString();
-          document.cookie = `${this._key}=${mode}; domain=${document.domain}; expires=${expires}; samesite=strict`;
+          document.cookie = `${darkModeKey}=${mode}; domain=${document.domain}; expires=${expires}; samesite=strict`;
         },
         _setDarkMode(mode) {
           this.on = mode;
